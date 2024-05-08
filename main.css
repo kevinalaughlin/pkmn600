@@ -19,6 +19,10 @@ body {
     font-family: tt-commons-pro, sans-serif;
     font-weight: 500;
     line-height: 120%;
+    max-width: 35rem;
+    width: 100vw;
+    margin: 0 auto;
+    padding: 1rem 0;
 }
 
 input, textarea, button {
@@ -56,19 +60,27 @@ h1, .h1 {
     line-height: 50%;
 }
 
-.u-text-bold {
+/* UTILITIES */
+.u-text-outlined {
+    color: rgba(255, 255, 255, 0);
+    -webkit-text-stroke: 1px var(--white);
+}
+
+.u-position-top {
+    z-index: 100;
+}
+
+.u-size-hidden {
+    transform: scale(0);
+}
+
+.u-text-bold{
     font-weight: 700;
 }
 
 /* CLASSES */
-.global-padding {
-    max-width: 35rem;
-    width: 100vw;
-    margin: 0 auto;
-    padding: 1rem 0;
-}
 
-.hero-wrapper {
+.hero {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -77,29 +89,26 @@ h1, .h1 {
     text-align: center;
 }
 
-.hero-text {
+.hero_text {
     overflow: hidden;
     white-space: nowrap;
-    z-index: 1;
+    text-transform: uppercase;
 }
 
-.hero-text-outline {
-    color: rgba(255, 255, 255, 0);
-    -webkit-text-stroke: 1px var(--white);
-    white-space: nowrap;
-    z-index: 3;
-}
-
-.pokeball-wrapper {
+.hero_pokeball-wrapper, .hero_pokemon-wrapper {
     position: absolute;
     z-index: 2;
 }
 
-.pokeball {
-    max-width: 20rem;
+.hero_pokeball {
+    max-width: 15rem;
 }
 
-.stat-options {
+.hero_pokemon {
+    max-width: 15rem;
+}
+
+.stats {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 1rem;
@@ -109,31 +118,32 @@ h1, .h1 {
     background-color: var(--muted-navy);
     border-radius: 1rem;
     padding: 1rem;
+    width: 100%;
 }
 
-.summary-top {
+.summary_top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
 }
 
-.summary-details {
+.summary_details {
     display: flex;
     gap: .5rem;
     font-size: 1.25rem;
 }
 
-.summary-number {
+.summary_number {
     color: var(--muted-purple);
 }
 
-.summary-types {
+.summary_types {
     display: flex;
     gap: .5rem;
 }
 
-.type-tag {
+.summary_tag {
     font-size: .7rem;
     letter-spacing: .1rem;
     text-transform: uppercase;
@@ -142,30 +152,30 @@ h1, .h1 {
     border-radius: 10rem;
 }
 
-.summary-bottom {
+.summary_bottom {
     display: grid;
     grid-template-columns: 3fr 1fr;
     column-gap: 1rem;
 }
 
-.summary-stats {
+.summary_stats {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
     gap: 0.5rem;
 }
 
-.stat-number {
+.summary_amount {
     font-weight: 700;
     color: var(--muted-purple);
 }
 
-.stat-name {
+.summary_stat-type {
     font-size: .75rem;
     text-transform: uppercase;
     color: var(--muted-purple);
 }
 
-.headshot {
+.summary_pokemon {
     width: 100%;
 }

@@ -7,72 +7,70 @@
     <title>600 Base Stat Challenge</title>
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://use.typekit.net/wms0ywj.css">
-    <script src="main.js"></script>
 </head>
 <body>
     <header>
-        <nav aria-label="primary">PKMN600</nav>
+        <div class="global-padding"><h1>PKMN600</h1></div>
     </header>
     <main>
-        <div class="hero-wrapper">
-            <div class="hero-text"><span class="h1">PKMN600 * PKMN600 * PKMN600 * PKMN600 * PKMN600</span></div>
-            <div class="hero-text-outline"><span class="h1">PKMN600 * PKMN600 * PKMN600 * PKMN600 * PKMN600</span></div>
-            <div class="pokeball-wrapper"><img src="images/pokeball.png" class="pokeball"></div>
+        <div class="hero">
+            <div class="hero_text"><span class="h1" id="hero_text--pokemon-name-number">PKMN600 * PKMN600</span></div>
+            <div class="hero_text u-position-top"><span class="h1 u-text-outlined" id="hero_text--type">PKMN600 * PKMN600</span></div>
+            <div class="hero_pokeball-wrapper"><img class="hero_pokeball" id="hero_pokeball" src="images/pokeball.png"></div>
+            <div class="hero_pokemon-wrapper"><img class="hero_pokemon" id="hero_pokemon" src=""></div>
         </div>
-        <div class="global-padding">
-            <div class="stat-options">
-                <button class="btn-stat hp">HP</button>
-                <button class="btn-stat attack">Attack</button>
-                <button class="btn-stat defense">Defense</button>
-                <button class="btn-stat sp-atk">Sp. Atk</button>
-                <button class="btn-stat sp-def">Sp. Def</button>
-                <button class="btn-stat speed">Speed</button>
-            </div>
+        <div class="stats">
+            <button id="HP">HP</button>
+            <button id="Attack">Attack</button>
+            <button id="Defense">Defense</button>
+            <button id="SpAtk">Sp. Atk</button>
+            <button id="SpDef">Sp. Def</button>
+            <button id="Speed">Speed</button>
         </div>
-        <div class="global-padding">
-            <div class="summary">
-                <div class="summary-top">
-                    <div class="summary-details">
-                        <div class="summary-name u-text-bold">Pokemon Name</div>
-                        <div class="summary-number u-text-bold">#?</div>
-                    </div>
-                    <div class="summary-types">
-                        <div class="type-tag">Type 1</div>
-                        <div class="type-tag">Type 2</div>
-                    </div>
+        <div class="summary">
+            <div class="summary_top">
+                <div class="summary_details">
+                    <div class="summary_name u-text-bold">Pokemon Name</div>
+                    <div class="summary_number u-text-bold">#?</div>
                 </div>
-                <div class="summary-bottom">
-                    <div class="summary-stats">
-                        <div class="stat-wrapper">
-                            <div class="stat-number">??</div>
-                            <div class="stat-name">HP</div>
-                        </div>
-                        <div class="stat-wrapper">
-                            <div class="stat-number">??</div>
-                            <div class="stat-name">Attack</div>
-                        </div>
-                        <div class="stat-wrapper">
-                            <div class="stat-number">??</div>
-                            <div class="stat-name">Defense</div>
-                        </div>
-                        <div class="stat-wrapper">
-                            <div class="stat-number">??</div>
-                            <div class="stat-name">Sp. Atk</div>
-                        </div>
-                        <div class="stat-wrapper">
-                            <div class="stat-number">??</div>
-                            <div class="stat-name">Sp. Def</div>
-                        </div>
-                        <div class="stat-wrapper">
-                            <div class="stat-number">??</div>
-                            <div class="stat-name">Speed</div>
-                        </div>
-                    </div>
-                    <div class="summary-image"><img src="images/pokeball.png" class="headshot"></div>
+                <div class="summary_types">
+                    <div class="summary_tag">Type 1</div>
+                    <div class="summary_tag">Type 2</div>
                 </div>
             </div>
+            <div class="summary_bottom">
+                <div class="summary_stats">
+                    <div class="summary_wrapper">
+                        <div class="summary_amount">??</div>
+                        <div class="summary_stat-type">HP</div>
+                    </div>
+                    <div class="stat-wrapper">
+                        <div class="summary_amount">??</div>
+                        <div class="summary_stat-type">Attack</div>
+                    </div>
+                    <div class="summary_wrapper">
+                        <div class="summary_amount">??</div>
+                        <div class="summary_stat-type">Defense</div>
+                    </div>
+                    <div class="summary_wrapper">
+                        <div class="summary_amount">??</div>
+                        <div class="summary_stat-type">Sp. Atk</div>
+                    </div>
+                    <div class="summary_wrapper">
+                        <div class="summary_amount">??</div>
+                        <div class="summary_stat-type">Sp. Def</div>
+                    </div>
+                    <div class="summary_wrapper">
+                        <div class="summary_amount">??</div>
+                        <div class="summary_stat-type">Speed</div>
+                    </div>
+                </div>
+                <div class="summary_pokemon-wrapper"><img src="images/pokeball.png" class="summary_pokemon"></div>
+            </div>
         </div>
+        <button id="testPokemon">Generate</button>
     </main>
     <footer></footer>
+    <script src="main.js"></script>
 </body>
 </html>
