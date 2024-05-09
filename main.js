@@ -182,6 +182,11 @@ function selectStat(button, statValue, summaryValue) {
 
     // Re-enable the "Generate Pokémon" button
     pokemonGenerator.disabled = false;
+
+    if (allStatsChosen()) {
+        endGame();
+        console.log(`Final Score: ${gameScore}`)
+    }
 }
 
 // Enable non-selected stat buttons
@@ -202,6 +207,11 @@ function disableNonSelectedStatButtons() {
     });
 }
 
+// Check if all stats have been chosen
+function allStatsChosen() {
+    return Object.values(statButtons).every (button => button.classList.contains("stats_chosen"));
+}
+
 // Game score
 let gameScore = 0;
 const scoreNumber = document.getElementById("score_number");
@@ -209,4 +219,9 @@ scoreNumber.innerHTML = gameScore;
 
 function updateScoreDisplay() {
     scoreNumber.innerHTML = gameScore;
+}
+
+// End game after all stats chosen
+function endGame() {
+    pokemonGenerator.disabled = true;
 }
