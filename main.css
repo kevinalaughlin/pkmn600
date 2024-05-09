@@ -172,10 +172,6 @@ h4, .h4 {
     text-transform: uppercase;
 }
 
-.summary_number {
-    color: var(--muted-purple);
-}
-
 .summary_types {
     display: flex;
     gap: .5rem;
@@ -206,6 +202,14 @@ h4, .h4 {
 .summary_amount {
     font-weight: 700;
     color: var(--muted-purple);
+}
+
+.selected_number {
+    color: var(--white);
+}
+
+.higher_number {
+    color: var(--green);
 }
 
 .summary_stat-type {
