@@ -10,7 +10,11 @@
 </head>
 <body>
     <header>
-        <div class="global-padding"><h1>PKMN600</h1></div>
+        <div><h1 class="h4">PKMN600</h1></div>
+        <div class="score">
+            <div><span id="score_text">Score</span></div>
+            <div><span class="h1" id="score_number">0</span></div>
+        </div>
     </header>
     <main>
         <div class="hero">
@@ -19,7 +23,7 @@
             <div class="hero_pokeball-wrapper"><img class="hero_pokeball" id="hero_pokeball" src="images/pokeball.png"></div>
             <div class="hero_pokemon-wrapper"><img class="hero_pokemon" id="hero_pokemon" src=""></div>
         </div>
-        <div class="stats">
+        <div class="stats" id="stats">
             <button id="HP">HP</button>
             <button id="Attack">Attack</button>
             <button id="Defense">Defense</button>
@@ -30,42 +34,42 @@
         <div class="summary">
             <div class="summary_top">
                 <div class="summary_details">
-                    <div class="summary_name u-text-bold">Pokemon Name</div>
-                    <div class="summary_number u-text-bold">#?</div>
+                    <div class="summary_name u-text-bold" id="summary_name">Pokemon Name</div>
+                    <div class="summary_number u-text-bold" id="summary_number">#?</div>
                 </div>
                 <div class="summary_types">
-                    <div class="summary_tag">Type 1</div>
-                    <div class="summary_tag">Type 2</div>
+                    <div class="summary_tag" id="summary_primary-type">Type 1</div>
+                    <div class="summary_tag" id="summary_secondary-type">Type 2</div>
                 </div>
             </div>
             <div class="summary_bottom">
                 <div class="summary_stats">
                     <div class="summary_wrapper">
-                        <div class="summary_amount">??</div>
+                        <div class="summary_amount" id="hp_amount">??</div>
                         <div class="summary_stat-type">HP</div>
                     </div>
                     <div class="stat-wrapper">
-                        <div class="summary_amount">??</div>
+                        <div class="summary_amount" id="attack_amount">??</div>
                         <div class="summary_stat-type">Attack</div>
                     </div>
                     <div class="summary_wrapper">
-                        <div class="summary_amount">??</div>
+                        <div class="summary_amount" id="defense_amount">??</div>
                         <div class="summary_stat-type">Defense</div>
                     </div>
                     <div class="summary_wrapper">
-                        <div class="summary_amount">??</div>
+                        <div class="summary_amount" id="sp-atk_amount">??</div>
                         <div class="summary_stat-type">Sp. Atk</div>
                     </div>
                     <div class="summary_wrapper">
-                        <div class="summary_amount">??</div>
+                        <div class="summary_amount" id="sp-def_amount">??</div>
                         <div class="summary_stat-type">Sp. Def</div>
                     </div>
                     <div class="summary_wrapper">
-                        <div class="summary_amount">??</div>
+                        <div class="summary_amount" id="speed_amount">??</div>
                         <div class="summary_stat-type">Speed</div>
                     </div>
                 </div>
-                <div class="summary_pokemon-wrapper"><img src="images/pokeball.png" class="summary_pokemon"></div>
+                <div class="summary_pokemon-wrapper"><img src="images/pokeball.png" class="summary_pokemon" id="summary_pokemon"></div>
             </div>
         </div>
         <button id="testPokemon">Generate</button>

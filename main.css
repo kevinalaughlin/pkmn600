@@ -10,6 +10,16 @@
     font-size: 16px;
 }
 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    overflow-x: hidden;
+}
+
 body {
     background-color: var(--navy);
     color: var(--white);
@@ -19,10 +29,10 @@ body {
     font-family: tt-commons-pro, sans-serif;
     font-weight: 500;
     line-height: 120%;
-    max-width: 35rem;
-    width: 100vw;
+    width: 35rem;
+    max-width: 100vw;
     margin: 0 auto;
-    padding: 1rem 0;
+    padding: 1rem;
 }
 
 input, textarea, button {
@@ -47,6 +57,17 @@ button:hover {
     opacity: .8;
 }
 
+button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.stats_chosen:disabled {
+    opacity: 1;
+    background-color: #8264F800;
+    cursor: default;
+}
+
 /* TYPOGRAPHY */
 
 h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
@@ -58,6 +79,10 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
 h1, .h1 {
     font-size: 4rem;
     line-height: 50%;
+}
+
+h4, .h4 {
+    font-size: 1rem;
 }
 
 /* UTILITIES */
@@ -78,7 +103,15 @@ h1, .h1 {
     font-weight: 700;
 }
 
+.u-display-none {
+    display: none;
+}
+
 /* CLASSES */
+
+.score {
+    text-align: center;
+}
 
 .hero {
     display: flex;
@@ -112,6 +145,7 @@ h1, .h1 {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .summary {
@@ -132,6 +166,10 @@ h1, .h1 {
     display: flex;
     gap: .5rem;
     font-size: 1.25rem;
+}
+
+.summary_name::first-letter {
+    text-transform: uppercase;
 }
 
 .summary_number {
