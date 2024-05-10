@@ -1,6 +1,5 @@
 // Pokémon data object
 let pokemon = {
-    name: "",
     id: 0,
     types: [],
     img: "",
@@ -16,13 +15,23 @@ let pokemon = {
     secondaryType: ""
 };
 
+let species = {
+    name: "",
+    generation: ""
+};
+
 // Get Pokémon stats from PokeAPI
 async function getPokeAPIStats(num) {
+    const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${num}`;
+    const speciesRes = await fetch(speciesUrl);
+    const speciesData = await speciesRes.json();
+
     const url = `https://pokeapi.co/api/v2/pokemon/${num}`;
     const res = await fetch(url);
     const data = await res.json();
 
-    pokemon.name = data.name;
+    species.name = speciesData.name;
+    species.generation = speciesData.generation.name;
     pokemon.id = data.id;
     pokemon.types = data.types;
     pokemon.img = data.sprites.other.home.front_default;
@@ -55,7 +64,6 @@ const summaryElements = {
 };
 
 const pokemonImage = document.getElementById("hero_pokemon");
-const pokemonTypeText = document.getElementById("hero_text--type");
 
 // Reset summary data
 function resetPokemonSummary() {
@@ -99,19 +107,19 @@ function highlightStats(selectedElement, selectedStatValue) {
     });
 }
 
+const heroTextSolid = document.getElementById("hero_text--solid");
+const heroTextOutline = document.getElementById("hero_text--outlined");
+
 // Update hero and summary sections with Pokémon data
 async function updateHeroPokemon() {
     await getPokeAPIStats(getRandomPokemon());
 
     pokemonImage.src = pokemon.img;
-    pokemonImage.alt = `Image of ${pokemon.name}`;
-    document.getElementById("hero_text--pokemon-name-number").innerHTML = `${pokemon.name}\u00A0\u00A0\u00A0*\u00A0\u00A0\u00A0#${pokemon.id}`;
-    pokemonTypeText.innerHTML = `${pokemon.primaryType}`;
-    if (pokemon.secondaryType !== "None") {
-        pokemonTypeText.innerHTML += `\u00A0\u00A0\u00A0+\u00A0\u00A0\u00A0${pokemon.secondaryType}`;
-    }
+    pokemonImage.alt = `Image of ${species.name}`;
+    heroTextSolid.innerHTML = `${species.name}`;
+    heroTextOutline.innerHTML = `${species.name}`;
 
-    summaryElements.name.innerHTML = pokemon.name;
+    summaryElements.name.innerHTML = species.name;
     summaryElements.number.innerHTML = `#${pokemon.id}`;
     summaryElements.primaryType.innerHTML = pokemon.primaryType;
     if (pokemon.secondaryType !== "None") {
@@ -119,9 +127,6 @@ async function updateHeroPokemon() {
     } else {
         summaryElements.secondaryType.classList.add("u-display-none");
     }
-
-    summaryElements.img.src = pokemon.img;
-    summaryElements.img.alt = `Image of ${pokemon.name}`;
 }
 
 function updateSummaryStats() {
@@ -134,14 +139,14 @@ function updateSummaryStats() {
 }
 
 let statSelected = false;
-const pokemonGenerator = document.getElementById("testPokemon");
+
 const pokeball = document.getElementById("hero_pokeball");
 
 // Generate new Pokémon
-pokemonGenerator.addEventListener("click", async () => {
-    pokeball.classList.add("u-size-hidden");
+pokeball.addEventListener("click", async () => {
+    pokeball.classList.add("u-display-none");
+    pokemonImage.classList.remove("u-display-none");
     resetPokemonSummary();
-    pokemonGenerator.disabled = true;
     await updateHeroPokemon();
     enableNonSelectedStatButtons();
     statSelected = false;
@@ -156,6 +161,15 @@ const statButtons = {
     spDef: document.getElementById("SpDef"),
     spd: document.getElementById("Speed")
 };
+
+// Disable all stat buttons. Generating a pokemon enables them.
+function disableAllStatButtons() {
+    Object.values(statButtons).forEach(button => {
+        button.disabled = true;
+    });
+}
+
+disableAllStatButtons();
 
 // Add event listeners to stat buttons
 statButtons.hp.addEventListener("click", () => selectStat(statButtons.hp, pokemon.stats.hp, summaryElements.stats.hp));
@@ -180,12 +194,17 @@ function selectStat(button, statValue, summaryValue) {
     updateSummaryStats(); // Update stats first
     highlightStats(summaryValue, statValue); // Highlight stats afterward
 
-    // Re-enable the "Generate Pokémon" button
-    pokemonGenerator.disabled = false;
+    // Re-enable the Pokeball generator
+    pokeball.classList.remove("u-display-none");
+    pokemonImage.classList.add("u-display-none");
+    pokemonImage.src = "";
+    pokemonImage.alt = "";
+    heroTextSolid.innerHTML = "";
+    heroTextOutline.innerHTML = "";
 
     if (allStatsChosen()) {
         endGame();
-        console.log(`Final Score: ${gameScore}`)
+        console.log(`Final Score: ${gameScore}`);
     }
 }
 
@@ -221,7 +240,10 @@ function updateScoreDisplay() {
     scoreNumber.innerHTML = gameScore;
 }
 
+const statButtonGroup = document.getElementById("stats");
+
 // End game after all stats chosen
 function endGame() {
-    pokemonGenerator.disabled = true;
+    pokeball.classList.add("u-display-none");
+    statButtonGroup.classList.add("u-display-none");
 }
