@@ -213,6 +213,12 @@ h4, .h4 {
     color: var(--muted-purple);
 }
 
+.summary_amount-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
 .summary_wrapper {
     background-color: var(--lighter-navy);
     border-radius: .5rem;
@@ -224,15 +230,15 @@ h4, .h4 {
     color: var(--white);
 }
 
-.higher_number {
-    color: var(--green);
-}
-
 .summary_stat-type {
     font-size: .75rem;
     text-transform: uppercase;
     color: var(--muted-purple);
     letter-spacing: .1rem;
+}
+
+.stats_best {
+    border: 1px solid var(--green);
 }
 
 /* UTILITIES */

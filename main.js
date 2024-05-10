@@ -59,52 +59,127 @@ const summaryElements = {
         def: document.getElementById("defense_amount"),
         spAtk: document.getElementById("sp-atk_amount"),
         spDef: document.getElementById("sp-def_amount"),
-        spd: document.getElementById("speed_amount")
+        spd: document.getElementById("speed_amount"),
+    },
+    wrappers: {
+        hp: document.getElementById("hp_wrapper"),
+        atk: document.getElementById("attack_wrapper"),
+        def: document.getElementById("defense_wrapper"),
+        spAtk: document.getElementById("sp-atk_wrapper"),
+        spDef: document.getElementById("sp-def_wrapper"),
+        spd: document.getElementById("speed_wrapper"),
+    },
+    amountContainers: {
+        hp: document.getElementById("hp_amount-container"),
+        atk: document.getElementById("attack_amount-container"),
+        def: document.getElementById("defense_amount-container"),
+        spAtk: document.getElementById("sp-atk_amount-container"),
+        spDef: document.getElementById("sp-def_amount-container"),
+        spd: document.getElementById("speed_amount-container")
     }
 };
 
 const pokemonImage = document.getElementById("hero_pokemon");
 
-// Reset summary data
+// Reset summary data, stat icons, and remove highlights
 function resetPokemonSummary() {
     summaryElements.secondaryType.classList.remove("u-display-none");
     Object.values(summaryElements.stats).forEach(stat => stat.textContent = "??");
-    removeStatHighlights();
-}
 
-// Remove highlights from all stats
-function removeStatHighlights() {
     Object.values(summaryElements.stats).forEach(stat => {
         stat.classList.remove("selected_number", "higher_number");
     });
+
+    // Remove stat icons
+    Object.values(summaryElements.amountContainers).forEach(container => {
+        // Clear all child elements except the amount text
+        const amountElement = container.querySelector("div.summary_amount");
+        if (amountElement) {
+            container.innerHTML = "";
+            container.appendChild(amountElement);
+        } else {
+            container.innerHTML = "";
+        }
+    });
+
+    // Remove best choice highlight
+    Object.values(summaryElements.wrappers).forEach(wrapper => wrapper.classList.remove("stats_best"));
 }
 
-// Highlight both the selected and highest stat
-function highlightStats(selectedElement, selectedStatValue) {
-    // Highlight the selected stat
-    selectedElement.classList.add("selected_number");
-
+// Highlight relevant stats (selected, higher, and best choice)
+function highlightRelevantStats(selectedElement, selectedStatValue, selectedContainer) {
     // List of stats and corresponding summary elements
     const stats = [
-        { value: pokemon.stats.hp, element: summaryElements.stats.hp },
-        { value: pokemon.stats.atk, element: summaryElements.stats.atk },
-        { value: pokemon.stats.def, element: summaryElements.stats.def },
-        { value: pokemon.stats.spAtk, element: summaryElements.stats.spAtk },
-        { value: pokemon.stats.spDef, element: summaryElements.stats.spDef },
-        { value: pokemon.stats.spd, element: summaryElements.stats.spd }
+        { value: pokemon.stats.hp, element: summaryElements.stats.hp, wrapper: summaryElements.wrappers.hp, container: summaryElements.amountContainers.hp, button: statButtons.hp },
+        { value: pokemon.stats.atk, element: summaryElements.stats.atk, wrapper: summaryElements.wrappers.atk, container: summaryElements.amountContainers.atk, button: statButtons.atk },
+        { value: pokemon.stats.def, element: summaryElements.stats.def, wrapper: summaryElements.wrappers.def, container: summaryElements.amountContainers.def, button: statButtons.def },
+        { value: pokemon.stats.spAtk, element: summaryElements.stats.spAtk, wrapper: summaryElements.wrappers.spAtk, container: summaryElements.amountContainers.spAtk, button: statButtons.spAtk },
+        { value: pokemon.stats.spDef, element: summaryElements.stats.spDef, wrapper: summaryElements.wrappers.spDef, container: summaryElements.amountContainers.spDef, button: statButtons.spDef },
+        { value: pokemon.stats.spd, element: summaryElements.stats.spd, wrapper: summaryElements.wrappers.spd, container: summaryElements.amountContainers.spd, button: statButtons.spd }
     ];
 
-    // Update the textContent and apply styles
+    // Highlight the selected stat
+    selectedElement.classList.add("selected_number");
+    appendStatIcon(selectedContainer, "check");
+
+    // Filter out already chosen stats
+    const availableStats = stats.filter(stat => !stat.button.classList.contains("stats_chosen"));
+
+    // Determine the highest stat value among available stats
+    const highestValue = Math.max(...availableStats.map(stat => stat.value));
+
+    // Highlight all stats that have the highest value and higher stats
     stats.forEach(stat => {
         stat.element.textContent = `${stat.value}`;
 
+        // Highlight higher stats with arrow-up icon
         if (stat.value > selectedStatValue) {
             stat.element.classList.add("higher_number");
-            stat.element.textContent += ` ↑`;
+            appendStatIcon(stat.container, "arrowUp");
         } else {
             stat.element.classList.remove("higher_number");
+            const existingArrow = stat.container.querySelector("div img[src='images/icons/ArrowUp.svg']");
+            if (existingArrow) {
+                existingArrow.parentElement.remove();
+            }
+        }
+
+        // Highlight the best available stats
+        if (stat.value === highestValue && !stat.button.classList.contains("stats_chosen")) {
+            stat.wrapper.classList.add("stats_best");
+        } else {
+            stat.wrapper.classList.remove("stats_best");
         }
     });
+}
+
+// Append icon to amount container
+function appendStatIcon(container, iconType) {
+    const iconSrcMap = {
+        check: "images/icons/check.svg",
+        arrowUp: "images/icons/ArrowUp.svg"
+    };
+
+    const iconAltMap = {
+        check: "Checkmark Icon",
+        arrowUp: "Arrow Up Icon"
+    };
+
+    // Create the div and img elements
+    const iconDiv = document.createElement("div");
+    const iconImg = document.createElement("img");
+    iconImg.src = iconSrcMap[iconType];
+    iconImg.alt = iconAltMap[iconType];
+    iconDiv.appendChild(iconImg);
+
+    // Clear any existing icon before appending the new one
+    const existingIcon = container.querySelector(`div img[src='${iconSrcMap[iconType]}']`);
+    if (existingIcon) {
+        existingIcon.parentElement.remove();
+    }
+
+    // Append the new icon
+    container.appendChild(iconDiv);
 }
 
 const heroTextSolid = document.getElementById("hero_text--solid");
@@ -146,6 +221,10 @@ const pokeball = document.getElementById("hero_pokeball");
 pokeball.addEventListener("click", async () => {
     pokeball.classList.add("u-display-none");
     pokemonImage.classList.remove("u-display-none");
+
+    // Remove best choice highlight
+    Object.values(summaryElements.wrappers).forEach(wrapper => wrapper.classList.remove("stats_best"));
+
     resetPokemonSummary();
     await updateHeroPokemon();
     enableNonSelectedStatButtons();
@@ -172,15 +251,18 @@ function disableAllStatButtons() {
 disableAllStatButtons();
 
 // Add event listeners to stat buttons
-statButtons.hp.addEventListener("click", () => selectStat(statButtons.hp, pokemon.stats.hp, summaryElements.stats.hp));
-statButtons.atk.addEventListener("click", () => selectStat(statButtons.atk, pokemon.stats.atk, summaryElements.stats.atk));
-statButtons.def.addEventListener("click", () => selectStat(statButtons.def, pokemon.stats.def, summaryElements.stats.def));
-statButtons.spAtk.addEventListener("click", () => selectStat(statButtons.spAtk, pokemon.stats.spAtk, summaryElements.stats.spAtk));
-statButtons.spDef.addEventListener("click", () => selectStat(statButtons.spDef, pokemon.stats.spDef, summaryElements.stats.spDef));
-statButtons.spd.addEventListener("click", () => selectStat(statButtons.spd, pokemon.stats.spd, summaryElements.stats.spd));
+statButtons.hp.addEventListener("click", () => selectStat(statButtons.hp, pokemon.stats.hp, summaryElements.stats.hp, summaryElements.amountContainers.hp));
+statButtons.atk.addEventListener("click", () => selectStat(statButtons.atk, pokemon.stats.atk, summaryElements.stats.atk, summaryElements.amountContainers.atk));
+statButtons.def.addEventListener("click", () => selectStat(statButtons.def, pokemon.stats.def, summaryElements.stats.def, summaryElements.amountContainers.def));
+statButtons.spAtk.addEventListener("click", () => selectStat(statButtons.spAtk, pokemon.stats.spAtk, summaryElements.stats.spAtk, summaryElements.amountContainers.spAtk));
+statButtons.spDef.addEventListener("click", () => selectStat(statButtons.spDef, pokemon.stats.spDef, summaryElements.stats.spDef, summaryElements.amountContainers.spDef));
+statButtons.spd.addEventListener("click", () => selectStat(statButtons.spd, pokemon.stats.spd, summaryElements.stats.spd, summaryElements.amountContainers.spd));
 
-function selectStat(button, statValue, summaryValue) {
+// Select stat and highlight relevant stats
+function selectStat(button, statValue, summaryValue, container) {
     if (statSelected || button.classList.contains("stats_chosen")) return;
+
+    highlightRelevantStats(summaryValue, statValue, container);
 
     button.innerHTML += ` - ${statValue}`;
     button.classList.add("stats_chosen");
@@ -192,7 +274,6 @@ function selectStat(button, statValue, summaryValue) {
 
     disableNonSelectedStatButtons();
     updateSummaryStats(); // Update stats first
-    highlightStats(summaryValue, statValue); // Highlight stats afterward
 
     // Re-enable the Pokeball generator
     pokeball.classList.remove("u-display-none");
