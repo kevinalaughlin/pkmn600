@@ -4,87 +4,94 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>600 Base Stat Challenge</title>
+    <title>Basestats.gg</title>
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://use.typekit.net/wms0ywj.css">
 </head>
 <body>
     <header>
-        <div class="score">
-            <div><span class="eyebrow" id="score_text">Score</span></div>
-            <div><span class="h3" id="score_number">0</span></div>
-        </div>
+        <nav><img src="images/logo/logo-white.svg" alt="Basestats.gg Logo" class="logo"></nav>
     </header>
     <main>
-        <div class="background-blur"></div>
-        <div class="hero">
-            <div class="hero_text"><span class="h1" id="hero_text--solid"></span></div>
-            <div class="hero_text u-position-top"><span class="h1 u-text-outlined" id="hero_text--outlined"></span></div>
-            <div class="hero_pokeball-wrapper"><img class="hero_pokeball" id="hero_pokeball" src="images/pokeball.png"></div>
-            <div class="hero_pokemon-wrapper"><img class="hero_pokemon" id="hero_pokemon" src=""></div>
+        <div class="score">
+            <div class="score_round-wrapper">
+                <div class="eyebrow">Round</div>
+                <div class="h2"><span id="current_round">1</span>/6</div>
+            </div>
+            <div class="score_points-wrapper">
+                <div class="eyebrow">Score</div>
+                <div class="h1" id="score_points">0</div>
+            </div>
+            <div class="score_max-wrapper">
+                <div class="eyebrow">Max</div>
+                <div class="h2" id="score_max">0</div>
+            </div>
         </div>
-        <div class="stats" id="stats">
-            <button id="HP">HP</button>
-            <button id="Attack">Attack</button>
-            <button id="Defense">Defense</button>
-            <button id="SpAtk">Sp. Atk</button>
-            <button id="SpDef">Sp. Def</button>
-            <button id="Speed">Speed</button>
+        <div class="hero">
+            <div class="hero_pokeball-wrapper"><img class="hero_pokeball" id="hero_pokeball" src="images/pokeball-main.svg"></div>
+            <div class="hero_pokemon-wrapper"><img class="hero_pokemon u-display-none" id="hero_pokemon" src=""></div>
         </div>
         <div class="summary">
-            <div class="summary_top">
-                <div class="summary_details">
-                    <div class="summary_name u-text-bold" id="summary_name">Pokemon Name</div>
-                    <div class="summary_number u-text-bold" id="summary_number">#?</div>
+            <div class="start">
+                <button class="power_button" id="power_evolve">
+                    <div class="power_icon"><img src="images/icons/evolve.svg" alt="Evolve icon"></div>
+                    <div class="power_name">Evolve</div>
+                </button>
+                <div class="preview">
+                    <span class="h2" id="preview_name">Pokemon</span>
+                    <div class="preview_type-wrapper">
+                        <div class="preview_type" id="preview_type-primary">Type 1</div>
+                        <div class="preview_type" id="preview_type-secondary">Type 2</div>
+                    </div>  
                 </div>
-                <div class="summary_types">
-                    <div class="summary_tag" id="summary_primary-type">Type 1</div>
-                    <div class="summary_tag" id="summary_secondary-type">Type 2</div>
-                </div>
+                <button class="power_button" id="power_trade">
+                    <div class="power_icon"><img src="images/icons/trade.svg" alt="Trade icon"></div>
+                    <div class="power_name">Trade</div>
+                </button>
             </div>
-            <div class="summary_bottom">
-                <div class="summary_stats">
-                    <div class="summary_wrapper" id="hp_wrapper">
-                        <div class="summary_amount-container" id="hp_amount-container">
-                            <div class="summary_amount" id="hp_amount">??</div>
-                        </div>
-                        <div class="summary_stat-type">HP</div>
+            <div class="stats">
+                <button class="stats_button" id="hp-button">
+                    <div class="stat-number-wrapper" id="hp-number-wrapper">
+                        <span class="stat-number u-display-none" id="hp-number">0</span>
                     </div>
-                    <div class="summary_wrapper" id="attack_wrapper">
-                        <div class="summary_amount-container" id="attack_amount-container">
-                            <div class="summary_amount" id="attack_amount">??</div>
-                        </div>
-                        <div class="summary_stat-type">Attack</div>
+                    <span class="stat-type">HP</span>
+                </button>
+                <button class="stats_button" id="attack-button">
+                    <div class="stat-number-wrapper" id="attack-number-wrapper">
+                        <span class="stat-number u-display-none" id="attack-number">0</span>
                     </div>
-                    <div class="summary_wrapper" id="defense_wrapper">
-                        <div class="summary_amount-container" id="defense_amount-container">
-                            <div class="summary_amount" id="defense_amount">??</div>
-                        </div>
-                        <div class="summary_stat-type">Defense</div>
+                    <span class="stat-type">Attack</span>
+                </button>
+                <button class="stats_button" id="defense-button">
+                    <div class="stat-number-wrapper" id="defense-number-wrapper">
+                        <span class="stat-number u-display-none" id="defense-number">0</span>
                     </div>
-                    <div class="summary_wrapper" id="sp-atk_wrapper">
-                        <div class="summary_amount-container" id="sp-atk_amount-container">
-                            <div class="summary_amount" id="sp-atk_amount">??</div>
-                        </div>
-                        <div class="summary_stat-type">Sp. Atk</div>
+                    <span class="stat-type">Defense</span>
+                </button>
+                <button class="stats_button" id="spAtk-button">
+                    <div class="stat-number-wrapper" id="spAtk-number-wrapper">
+                        <span class="stat-number u-display-none" id="spAtk-number">0</span>
                     </div>
-                    <div class="summary_wrapper" id="sp-def_wrapper">
-                        <div class="summary_amount-container" id="sp-def_amount-container">
-                            <div class="summary_amount" id="sp-def_amount">??</div>
-                        </div>
-                        <div class="summary_stat-type">Sp. Def</div>
+                    <span class="stat-type">Sp. Atk</span>
+                </button>
+                <button class="stats_button" id="spDef-button">
+                    <div class="stat-number-wrapper" id="spDef-number-wrapper">
+                        <span class="stat-number u-display-none" id="spDef-number">0</span>
                     </div>
-                    <div class="summary_wrapper" id="speed_wrapper">
-                        <div class="summary_amount-container" id="speed_amount-container">
-                            <div class="summary_amount" id="speed_amount">??</div>
-                        </div>
-                        <div class="summary_stat-type">Speed</div>
+                    <span class="stat-type">Sp. Def</span>
+                </button>
+                <button class="stats_button" id="speed-button">
+                    <div class="stat-number-wrapper" id="speed-number-wrapper">
+                        <span class="stat-number u-display-none" id="speed-number">0</span>
                     </div>
-                </div>
+                    <span class="stat-type">Speed</span>
+                </button>
             </div>
         </div>
     </main>
     <footer></footer>
+    <script src="pokeapi.js"></script>
+    <script src="animations.js"></script>
     <script src="main.js"></script>
 </body>
 </html>

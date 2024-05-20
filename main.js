@@ -1,159 +1,90 @@
-// Pokémon data object
-let pokemon = {
-    id: 0,
-    types: [],
-    img: "",
-    stats: {
-        hp: 0,
-        atk: 0,
-        def: 0,
-        spAtk: 0,
-        spDef: 0,
-        spd: 0
+const summaryElements = {
+    image: document.getElementById("hero_pokemon"),
+    name: document.getElementById("preview_name"),
+    primaryType: document.getElementById("preview_type-primary"),
+    secondaryType: document.getElementById("preview_type-secondary"),
+    buttons: {
+        hp: document.getElementById("hp-button"),
+        attack: document.getElementById("attack-button"),
+        defense: document.getElementById("defense-button"),
+        spAtk: document.getElementById("spAtk-button"),
+        spDef: document.getElementById("spDef-button"),
+        speed: document.getElementById("speed-button")
     },
-    primaryType: "",
-    secondaryType: ""
+    results: {
+        hp: document.getElementById("hp-number-wrapper"),
+        attack: document.getElementById("attack-number-wrapper"),
+        defense: document.getElementById("defense-number-wrapper"),
+        spAtk: document.getElementById("spAtk-number-wrapper"),
+        spDef: document.getElementById("spDef-number-wrapper"),
+        speed: document.getElementById("speed-number-wrapper")
+    },
+    number: {
+        hp: document.getElementById("hp-number"),
+        attack: document.getElementById("attack-number"),
+        defense: document.getElementById("defense-number"),
+        spAtk: document.getElementById("spAtk-number"),
+        spDef: document.getElementById("spDef-number"),
+        speed: document.getElementById("speed-number")
+    },
 };
-
-let species = {
-    name: "",
-    generation: ""
-};
-
-// Get Pokémon stats from PokeAPI
-async function getPokeAPIStats(num) {
-    const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${num}`;
-    const speciesRes = await fetch(speciesUrl);
-    const speciesData = await speciesRes.json();
-
-    const url = `https://pokeapi.co/api/v2/pokemon/${num}`;
-    const res = await fetch(url);
-    const data = await res.json();
-
-    species.name = speciesData.name;
-    species.generation = speciesData.generation.name;
-    pokemon.id = data.id;
-    pokemon.types = data.types;
-    pokemon.img = data.sprites.other.home.front_default;
-    const stats = data.stats.map(stat => stat.base_stat);
-    [pokemon.stats.hp, pokemon.stats.atk, pokemon.stats.def, pokemon.stats.spAtk, pokemon.stats.spDef, pokemon.stats.spd] = stats;
-    pokemon.primaryType = pokemon.types[0].type.name;
-    pokemon.secondaryType = pokemon.types[1] ? pokemon.types[1].type.name : "None";
-}
 
 // Generate a random number between 1 - 1025 (current number of Pokémon)
 function getRandomPokemon() {
     return Math.floor(Math.random() * 1025) + 1;
 }
 
-// DOM elements
-const summaryElements = {
-    name: document.getElementById("summary_name"),
-    number: document.getElementById("summary_number"),
-    primaryType: document.getElementById("summary_primary-type"),
-    secondaryType: document.getElementById("summary_secondary-type"),
-    img: document.getElementById("summary_pokemon"),
-    stats: {
-        hp: document.getElementById("hp_amount"),
-        atk: document.getElementById("attack_amount"),
-        def: document.getElementById("defense_amount"),
-        spAtk: document.getElementById("sp-atk_amount"),
-        spDef: document.getElementById("sp-def_amount"),
-        spd: document.getElementById("speed_amount"),
-    },
-    wrappers: {
-        hp: document.getElementById("hp_wrapper"),
-        atk: document.getElementById("attack_wrapper"),
-        def: document.getElementById("defense_wrapper"),
-        spAtk: document.getElementById("sp-atk_wrapper"),
-        spDef: document.getElementById("sp-def_wrapper"),
-        spd: document.getElementById("speed_wrapper"),
-    },
-    amountContainers: {
-        hp: document.getElementById("hp_amount-container"),
-        atk: document.getElementById("attack_amount-container"),
-        def: document.getElementById("defense_amount-container"),
-        spAtk: document.getElementById("sp-atk_amount-container"),
-        spDef: document.getElementById("sp-def_amount-container"),
-        spd: document.getElementById("speed_amount-container")
-    }
-};
 
-const pokemonImage = document.getElementById("hero_pokemon");
-
-// Reset summary data, stat icons, and remove highlights
-function resetPokemonSummary() {
-    summaryElements.secondaryType.classList.remove("u-display-none");
-    Object.values(summaryElements.stats).forEach(stat => stat.textContent = "??");
-
-    Object.values(summaryElements.stats).forEach(stat => {
-        stat.classList.remove("selected_number", "higher_number");
-    });
-
-    // Remove stat icons
-    Object.values(summaryElements.amountContainers).forEach(container => {
-        // Clear all child elements except the amount text
-        const amountElement = container.querySelector("div.summary_amount");
-        if (amountElement) {
-            container.innerHTML = "";
-            container.appendChild(amountElement);
-        } else {
-            container.innerHTML = "";
-        }
-    });
-
-    // Remove best choice highlight
-    Object.values(summaryElements.wrappers).forEach(wrapper => wrapper.classList.remove("stats_best"));
+// Update all stat elements
+function updateAllStats() {``
+    summaryElements.number.hp.innerHTML = pokemon.stats.hp;
+    summaryElements.number.attack.innerHTML = pokemon.stats.atk;
+    summaryElements.number.defense.innerHTML = pokemon.stats.def;
+    summaryElements.number.spAtk.innerHTML = pokemon.stats.spAtk;
+    summaryElements.number.spDef.innerHTML = pokemon.stats.spDef;
+    summaryElements.number.speed.innerHTML = pokemon.stats.spd;
 }
 
-// Highlight relevant stats (selected, higher, and best choice)
-function highlightRelevantStats(selectedElement, selectedStatValue, selectedContainer) {
-    // List of stats and corresponding summary elements
-    const stats = [
-        { value: pokemon.stats.hp, element: summaryElements.stats.hp, wrapper: summaryElements.wrappers.hp, container: summaryElements.amountContainers.hp, button: statButtons.hp },
-        { value: pokemon.stats.atk, element: summaryElements.stats.atk, wrapper: summaryElements.wrappers.atk, container: summaryElements.amountContainers.atk, button: statButtons.atk },
-        { value: pokemon.stats.def, element: summaryElements.stats.def, wrapper: summaryElements.wrappers.def, container: summaryElements.amountContainers.def, button: statButtons.def },
-        { value: pokemon.stats.spAtk, element: summaryElements.stats.spAtk, wrapper: summaryElements.wrappers.spAtk, container: summaryElements.amountContainers.spAtk, button: statButtons.spAtk },
-        { value: pokemon.stats.spDef, element: summaryElements.stats.spDef, wrapper: summaryElements.wrappers.spDef, container: summaryElements.amountContainers.spDef, button: statButtons.spDef },
-        { value: pokemon.stats.spd, element: summaryElements.stats.spd, wrapper: summaryElements.wrappers.spd, container: summaryElements.amountContainers.spd, button: statButtons.spd }
-    ];
+// Add event listeners for each button
+summaryElements.buttons.hp.addEventListener("click", () => selectStat(summaryElements.number.hp, pokemon.stats.hp, summaryElements.buttons.hp));
+summaryElements.buttons.attack.addEventListener("click", () => selectStat(summaryElements.number.attack, pokemon.stats.atk, summaryElements.buttons.attack));
+summaryElements.buttons.defense.addEventListener("click", () => selectStat(summaryElements.number.defense, pokemon.stats.def, summaryElements.buttons.defense));
+summaryElements.buttons.spAtk.addEventListener("click", () => selectStat(summaryElements.number.spAtk, pokemon.stats.spAtk, summaryElements.buttons.spAtk));
+summaryElements.buttons.spDef.addEventListener("click", () => selectStat(summaryElements.number.spDef, pokemon.stats.spDef, summaryElements.buttons.spDef));
+summaryElements.buttons.speed.addEventListener("click", () => selectStat(summaryElements.number.speed, pokemon.stats.spd, summaryElements.buttons.speed));
 
-    // Highlight the selected stat
-    selectedElement.classList.add("selected_number");
-    appendStatIcon(selectedContainer, "check");
+function highlightRelevantStats(selectedElement, selectedStatValue, selectedContainer) {
+    // Create an array of stats objects to manage element references and values
+    const stats = [
+        { name: "hp", value: pokemon.stats.hp, element: summaryElements.number.hp, wrapper: summaryElements.results.hp, button: summaryElements.buttons.hp },
+        { name: "atk", value: pokemon.stats.atk, element: summaryElements.number.attack, wrapper: summaryElements.results.attack, button: summaryElements.buttons.attack },
+        { name: "def", value: pokemon.stats.def, element: summaryElements.number.defense, wrapper: summaryElements.results.defense, button: summaryElements.buttons.defense },
+        { name: "spAtk", value: pokemon.stats.spAtk, element: summaryElements.number.spAtk, wrapper: summaryElements.results.spAtk, button: summaryElements.buttons.spAtk },
+        { name: "spDef", value: pokemon.stats.spDef, element: summaryElements.number.spDef, wrapper: summaryElements.results.spDef, button: summaryElements.buttons.spDef },
+        { name: "spd", value: pokemon.stats.spd, element: summaryElements.number.speed, wrapper: summaryElements.results.speed, button: summaryElements.buttons.speed }
+    ];
 
     // Filter out already chosen stats
     const availableStats = stats.filter(stat => !stat.button.classList.contains("stats_chosen"));
 
-    // Determine the highest stat value among available stats
-    const highestValue = Math.max(...availableStats.map(stat => stat.value));
+    // Determine the highest available stat value
+    const highestAvailableStat = availableStats.reduce((max, stat) => stat.value > max.value ? stat : max, availableStats[0]);
 
-    // Highlight all stats that have the highest value and higher stats
+    // Add the higher_number class and append arrow icons to stats higher than the selected value
     stats.forEach(stat => {
-        stat.element.textContent = `${stat.value}`;
-
-        // Highlight higher stats with arrow-up icon
         if (stat.value > selectedStatValue) {
-            stat.element.classList.add("higher_number");
-            appendStatIcon(stat.container, "arrowUp");
-        } else {
-            stat.element.classList.remove("higher_number");
-            const existingArrow = stat.container.querySelector("div img[src='images/icons/ArrowUp.svg']");
-            if (existingArrow) {
-                existingArrow.parentElement.remove();
-            }
+            appendStatIcon(stat.wrapper, "arrowUp");
         }
 
-        // Highlight the best available stats
-        if (stat.value === highestValue && !stat.button.classList.contains("stats_chosen")) {
-            stat.wrapper.classList.add("stats_best");
-        } else {
-            stat.wrapper.classList.remove("stats_best");
+        if (stat === highestAvailableStat && !stat.button.classList.contains("stats_chosen") && stat.value > selectedStatValue) {
+            stat.button.classList.add("higher_number");
         }
     });
+
+    selectedContainer.classList.add("selected_number");
+    appendStatIcon(summaryElements.results[selectedElement.id.replace("-number", "")], "check");
 }
 
-// Append icon to amount container
 function appendStatIcon(container, iconType) {
     const iconSrcMap = {
         check: "images/icons/check.svg",
@@ -182,149 +113,137 @@ function appendStatIcon(container, iconType) {
     container.appendChild(iconDiv);
 }
 
-const heroTextSolid = document.getElementById("hero_text--solid");
-const heroTextOutline = document.getElementById("hero_text--outlined");
+function resetStatsAndIcons() {
+    // Remove highlighted classes from buttons
+    Object.values(summaryElements.buttons).forEach(button => {
+        button.classList.remove("higher_number", "selected_number");
+    });
 
-// Update hero and summary sections with Pokémon data
-async function updateHeroPokemon() {
-    await getPokeAPIStats(getRandomPokemon());
-
-    pokemonImage.src = pokemon.img;
-    pokemonImage.alt = `Image of ${species.name}`;
-    heroTextSolid.innerHTML = `${species.name}`;
-    heroTextOutline.innerHTML = `${species.name}`;
-
-    summaryElements.name.innerHTML = species.name;
-    summaryElements.number.innerHTML = `#${pokemon.id}`;
-    summaryElements.primaryType.innerHTML = pokemon.primaryType;
-    if (pokemon.secondaryType !== "None") {
-        summaryElements.secondaryType.innerHTML = pokemon.secondaryType;
-    } else {
-        summaryElements.secondaryType.classList.add("u-display-none");
-    }
+    // Remove all appended icons
+    Object.values(summaryElements.results).forEach(wrapper => {
+        const icons = wrapper.querySelectorAll("div");
+        icons.forEach(icon => icon.remove());
+    });
 }
 
-function updateSummaryStats() {
-    summaryElements.stats.hp.textContent = `${pokemon.stats.hp}`;
-    summaryElements.stats.atk.textContent = `${pokemon.stats.atk}`;
-    summaryElements.stats.def.textContent = `${pokemon.stats.def}`;
-    summaryElements.stats.spAtk.textContent = `${pokemon.stats.spAtk}`;
-    summaryElements.stats.spDef.textContent = `${pokemon.stats.spDef}`;
-    summaryElements.stats.spd.textContent = `${pokemon.stats.spd}`;
-}
-
-let statSelected = false;
-
-const pokeball = document.getElementById("hero_pokeball");
-
-// Generate new Pokémon
-pokeball.addEventListener("click", async () => {
-    pokeball.classList.add("u-display-none");
-    pokemonImage.classList.remove("u-display-none");
-
-    // Remove best choice highlight
-    Object.values(summaryElements.wrappers).forEach(wrapper => wrapper.classList.remove("stats_best"));
-
-    resetPokemonSummary();
-    await updateHeroPokemon();
-    enableNonSelectedStatButtons();
-    statSelected = false;
-});
-
-// Stat button elements
-const statButtons = {
-    hp: document.getElementById("HP"),
-    atk: document.getElementById("Attack"),
-    def: document.getElementById("Defense"),
-    spAtk: document.getElementById("SpAtk"),
-    spDef: document.getElementById("SpDef"),
-    spd: document.getElementById("Speed")
-};
-
-// Disable all stat buttons. Generating a pokemon enables them.
-function disableAllStatButtons() {
-    Object.values(statButtons).forEach(button => {
+function disableButtons() {
+    Object.values(summaryElements.buttons).forEach(button => {
         button.disabled = true;
     });
 }
 
-disableAllStatButtons();
+disableButtons();
 
-// Add event listeners to stat buttons
-statButtons.hp.addEventListener("click", () => selectStat(statButtons.hp, pokemon.stats.hp, summaryElements.stats.hp, summaryElements.amountContainers.hp));
-statButtons.atk.addEventListener("click", () => selectStat(statButtons.atk, pokemon.stats.atk, summaryElements.stats.atk, summaryElements.amountContainers.atk));
-statButtons.def.addEventListener("click", () => selectStat(statButtons.def, pokemon.stats.def, summaryElements.stats.def, summaryElements.amountContainers.def));
-statButtons.spAtk.addEventListener("click", () => selectStat(statButtons.spAtk, pokemon.stats.spAtk, summaryElements.stats.spAtk, summaryElements.amountContainers.spAtk));
-statButtons.spDef.addEventListener("click", () => selectStat(statButtons.spDef, pokemon.stats.spDef, summaryElements.stats.spDef, summaryElements.amountContainers.spDef));
-statButtons.spd.addEventListener("click", () => selectStat(statButtons.spd, pokemon.stats.spd, summaryElements.stats.spd, summaryElements.amountContainers.spd));
-
-// Select stat and highlight relevant stats
-function selectStat(button, statValue, summaryValue, container) {
-    if (statSelected || button.classList.contains("stats_chosen")) return;
-
-    highlightRelevantStats(summaryValue, statValue, container);
-
-    button.innerHTML += ` - ${statValue}`;
-    button.classList.add("stats_chosen");
-    button.disabled = true;
-
-    gameScore += statValue;
-    updateScoreDisplay();
-    statSelected = true;
-
-    disableNonSelectedStatButtons();
-    updateSummaryStats(); // Update stats first
-
-    // Re-enable the Pokeball generator
-    pokeball.classList.remove("u-display-none");
-    pokemonImage.classList.add("u-display-none");
-    pokemonImage.src = "";
-    pokemonImage.alt = "";
-    heroTextSolid.innerHTML = "";
-    heroTextOutline.innerHTML = "";
-
-    if (allStatsChosen()) {
-        endGame();
-        console.log(`Final Score: ${gameScore}`);
-    }
-}
-
-// Enable non-selected stat buttons
-function enableNonSelectedStatButtons() {
-    Object.values(statButtons).forEach(button => {
+function enableButtons() {
+    Object.values(summaryElements.buttons).forEach(button => {
         if (!button.classList.contains("stats_chosen")) {
             button.disabled = false;
         }
     });
 }
 
-// Disable non-selected stat buttons
-function disableNonSelectedStatButtons() {
-    Object.values(statButtons).forEach(button => {
-        if (!button.classList.contains("stats_chosen")) {
-            button.disabled = true;
-        }
-    });
-}
-
-// Check if all stats have been chosen
-function allStatsChosen() {
-    return Object.values(statButtons).every (button => button.classList.contains("stats_chosen"));
-}
-
-// Game score
+// Update Game Score
+const scoreNumber = document.getElementById("score_points");
 let gameScore = 0;
-const scoreNumber = document.getElementById("score_number");
 scoreNumber.innerHTML = gameScore;
 
 function updateScoreDisplay() {
     scoreNumber.innerHTML = gameScore;
 }
 
-const statButtonGroup = document.getElementById("stats");
+// Update Round
+const currentRound = document.getElementById("current_round");
+let round = 1;
+currentRound.innerHTML = round;
 
-// End game after all stats chosen
-function endGame() {
-    pokeball.classList.add("u-display-none");
-    statButtonGroup.classList.add("u-display-none");
+function updateRoundDisplay() {
+    currentRound.innerHTML = round;
+}
+
+// Trade Pokemon
+const powerTrade = document.getElementById("power_trade");
+
+powerTrade.addEventListener("click", () => {
+    generatePokemon();
+    powerTrade.disabled = true;
+})
+
+// Evolve Pokemon
+const powerEvolve = document.getElementById("power_evolve");
+let evolveUsed = false;
+
+powerEvolve.disabled = true;
+
+powerEvolve.addEventListener("click", () => {
+    generatePokemon(evolvedID);
+    powerEvolve.disabled = true;
+    evolveUsed = true;
+});
+
+// Game assets
+const pokeball = document.getElementById("hero_pokeball");
+
+// Generate new Pokemon
+async function generatePokemon(pokemonId = null) {
+    resetStatsAndIcons(); // Reset stats and icons
+    summaryElements.secondaryType.classList.remove("u-display-none");
+    enableButtons();
+    await getPokeAPIStats(pokemonId || getRandomPokemon());
+    animatePokeballOut();
+    animatePokemonIn();
+    animateStatsOut();
+    summaryElements.image.src = pokemon.img;
+    summaryElements.image.alt = `Image of ${species.name}`;
+    summaryElements.name.innerHTML = `${species.name}`;
+    summaryElements.primaryType.innerHTML = `${pokemon.primaryType}`;
+    summaryElements.secondaryType.innerHTML = `${pokemon.secondaryType}`;
+    if (pokemon.secondaryType !== "None") {
+        summaryElements.secondaryType.innerHTML = pokemon.secondaryType;
+    } else {
+        summaryElements.secondaryType.classList.add("u-display-none");
+    }
+    if (canEvolve && !evolveUsed) {
+        powerEvolve.disabled = false;
+    } else {
+        powerEvolve.disabled = true;
+    }
+}
+
+pokeball.addEventListener("click", () => {
+    generatePokemon();
+});
+
+// Array to store Pokémon data objects
+const caughtPokemon = [];
+
+// Select a stat
+function selectStat(stat, statValue, button) {
+    button.classList.add("stats_chosen");
+    button.disabled = true;
+    gameScore += statValue;
+    round++;
+    
+    // Store the current Pokémon data in a new object
+    const currentPokemonData = {
+        name: species.name,
+        generation: species.generation,
+        id: pokemon.id,
+        types: pokemon.types,
+        img: pokemon.img,
+        stats: { ...pokemon.stats },
+        primaryType: pokemon.primaryType,
+        secondaryType: pokemon.secondaryType
+    };
+    
+    // Add the object to the capturedPokemons array
+    caughtPokemon.push(currentPokemonData);
+    
+    disableButtons();
+    updateAllStats();
+    animateStatsIn();
+    highlightRelevantStats(stat, statValue, button);
+    updateScoreDisplay();
+    updateRoundDisplay()
+    animatePokemonOut();
+    animatePokeballIn();
 }
