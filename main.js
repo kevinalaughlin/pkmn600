@@ -36,7 +36,8 @@ function getRandomPokemon() {
 
 
 // Update all stat elements
-function updateAllStats() {``
+function updateAllStats() {
+    ``
     summaryElements.number.hp.innerHTML = pokemon.stats.hp;
     summaryElements.number.attack.innerHTML = pokemon.stats.atk;
     summaryElements.number.defense.innerHTML = pokemon.stats.def;
@@ -163,10 +164,11 @@ function updateRoundDisplay() {
 // Trade Pokemon
 const powerTrade = document.getElementById("power_trade");
 
-powerTrade.addEventListener("click", () => {
-    generatePokemon();
+powerTrade.addEventListener("click", async () => {
+    const validRandomPokemon = await getValidRandomPokemon();
+    await generatePokemon(validRandomPokemon);
     powerTrade.disabled = true;
-})
+});
 
 // Evolve Pokemon
 const powerEvolve = document.getElementById("power_evolve");
@@ -183,12 +185,12 @@ powerEvolve.addEventListener("click", () => {
 // Game assets
 const pokeball = document.getElementById("hero_pokeball");
 
-// Generate new Pokemon
-async function generatePokemon(pokemonId = null) {
+// Generate new Pokemon with an optional ID parameter
+async function generatePokemon(pokemonID = getRandomPokemon()) {
     resetStatsAndIcons(); // Reset stats and icons
     summaryElements.secondaryType.classList.remove("u-display-none");
     enableButtons();
-    await getPokeAPIStats(pokemonId || getRandomPokemon());
+    await getPokeAPIStats(pokemonID);
     animatePokeballOut();
     animatePokemonIn();
     animateStatsOut();
@@ -202,6 +204,7 @@ async function generatePokemon(pokemonId = null) {
     } else {
         summaryElements.secondaryType.classList.add("u-display-none");
     }
+    console.log(canEvolve);
     if (canEvolve && !evolveUsed) {
         powerEvolve.disabled = false;
     } else {
@@ -213,16 +216,59 @@ pokeball.addEventListener("click", () => {
     generatePokemon();
 });
 
-// Array to store Pokémon data objects
 const caughtPokemon = [];
 
-// Select a stat
+// Function to calculate the maximum possible score
+function calculateMaximumPossibleScore() {
+    let bestScore = 0;
+    let bestCombination = [];
+
+    function calculateScore(index, usedStats, currentScore, currentCombination) {
+        if (index === caughtPokemon.length) {
+            if (currentScore > bestScore) {
+                bestScore = currentScore;
+                bestCombination = [...currentCombination];
+            }
+            return;
+        }
+
+        const pokemon = caughtPokemon[index];
+        for (let stat in pokemon.stats) {
+            if (!usedStats.has(stat)) {
+                usedStats.add(stat);
+                currentCombination.push({ pokemon: pokemon.name, stat, value: pokemon.stats[stat] });
+                calculateScore(index + 1, usedStats, currentScore + pokemon.stats[stat], currentCombination);
+                usedStats.delete(stat);
+                currentCombination.pop();
+            }
+        }
+    }
+
+    calculateScore(0, new Set(), 0, []);
+
+    // Log the choices made for calculating the maximum score
+    console.log("Choices made for calculating maximum score:");
+    bestCombination.forEach(choice => {
+        console.log(`Pokémon: ${choice.pokemon}, Stat: ${choice.stat}, Value: ${choice.value}`);
+    });
+
+    return bestScore;
+}
+
+// Function to update the displayed maximum possible score
+function updateMaximumPossibleScoreDisplay() {
+    const maxScore = calculateMaximumPossibleScore();
+    const maxScoreElement = document.getElementById("score_max");
+    maxScoreElement.innerHTML = maxScore;
+}
+
+// Example usage: update the maximum possible score after selecting a stat
 function selectStat(stat, statValue, button) {
     button.classList.add("stats_chosen");
     button.disabled = true;
     gameScore += statValue;
     round++;
-    
+
     // Store the current Pokémon data in a new object
     const currentPokemonData = {
         name: species.name,
@@ -234,16 +280,19 @@ function selectStat(stat, statValue, button) {
         primaryType: pokemon.primaryType,
         secondaryType: pokemon.secondaryType
     };
-    
-    // Add the object to the capturedPokemons array
+
+    // Add the object to the caughtPokemon array
     caughtPokemon.push(currentPokemonData);
-    
+
+    // Update the maximum possible score display
+    updateMaximumPossibleScoreDisplay();
+
     disableButtons();
     updateAllStats();
     animateStatsIn();
     highlightRelevantStats(stat, statValue, button);
     updateScoreDisplay();
-    updateRoundDisplay()
+    updateRoundDisplay();
     animatePokemonOut();
     animatePokeballIn();
 }
