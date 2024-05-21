@@ -121,7 +121,6 @@ h2, .h2 {
 
 .stats_chosen {
     border: 0;
-    color: var(--gray);
 }
 
 .selected_number {

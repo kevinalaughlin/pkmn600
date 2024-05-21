@@ -1,126 +1,103 @@
 // Pokémon data object
-// Pokémon data object
-let pokemon = {
-    id: 0,
-    types: [],
-    img: "",
-    stats: {
-        hp: 0,
-        atk: 0,
-        def: 0,
-        spAtk: 0,
-        spDef: 0,
-        spd: 0
-    },
-    primaryType: "",
-    secondaryType: ""
-};
+let pokemon = { name: "", id: 0, types: [], img: "", stats: { hp: 0, atk: 0, def: 0, spAtk: 0, spDef: 0, spd: 0 }, primaryType: "", secondaryType: "" };
 
-let species = {
-    name: "",
-    generation: ""
-};
+let species = { name: "", generation: "" };
 
-let canEvolve = false;
+let evolution = { id: "", options: "", evolvesTo: "" };
+
 let evolvedID = 0;
 
-const seenSpecies = new Set();
+const seenSpecies = [];
 
 async function getPokeAPIStats(num) {
-    try {
-        const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${num}`;
-        const speciesRes = await fetch(speciesUrl);
-        const speciesData = await speciesRes.json();
+    const url = `https://pokeapi.co/api/v2/pokemon/${num}`;
+    const res = await fetch(url);
+    const data = await res.json();
 
-        const variety = speciesData.varieties.find(variety => variety.is_default);
-        if (!variety) {
-            throw new Error(`No default variety found for species ${speciesData.name}`);
-        }
+    const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${num}`;
+    const speciesRes = await fetch(speciesUrl);
+    const speciesData = await speciesRes.json();
 
-        const url = variety.pokemon.url;
-        const res = await fetch(url);
-        const data = await res.json();
+    const evolutionChainUrl = speciesData.evolution_chain.url;
+    const evolutionChainRes = await fetch(evolutionChainUrl);
+    const evolutionChainData = await evolutionChainRes.json();
 
-        species.name = speciesData.name;
-        species.generation = speciesData.generation.name;
-        pokemon.id = data.id;
-        pokemon.types = data.types;
-        pokemon.img = data.sprites.other.home.front_default;
-        const stats = data.stats.map(stat => stat.base_stat);
-        [pokemon.stats.hp, pokemon.stats.atk, pokemon.stats.def, pokemon.stats.spAtk, pokemon.stats.spDef, pokemon.stats.spd] = stats;
-        pokemon.primaryType = pokemon.types[0].type.name;
-        pokemon.secondaryType = pokemon.types[1] ? pokemon.types[1].type.name : "None";
+    species.name = speciesData.name;
+    species.generation = speciesData.generation.name;
 
-        const evolutionChainUrl = speciesData.evolution_chain.url;
-        const evolutionChainRes = await fetch(evolutionChainUrl);
-        const evolutionChainData = await evolutionChainRes.json();
+    pokemon.name = data.name;
+    pokemon.id = data.id;
+    pokemon.types = data.types;
+    pokemon.img = data.sprites.other.home.front_default;
 
-        let currentEvolution = evolutionChainData.chain;
-        while (currentEvolution.evolves_to.length > 0) {
-            currentEvolution = currentEvolution.evolves_to[0];
-        }
-        const highestEvolvedName = currentEvolution.species.name;
+    const stats = data.stats.map(stat => stat.base_stat);
+    [pokemon.stats.hp, pokemon.stats.atk, pokemon.stats.def, pokemon.stats.spAtk, pokemon.stats.spDef, pokemon.stats.spd] = stats;
 
-        const highestEvolvedVarietyUrl = `https://pokeapi.co/api/v2/pokemon/${highestEvolvedName}`;
-        const highestEvolvedRes = await fetch(highestEvolvedVarietyUrl);
-        if (!highestEvolvedRes.ok) {
-            throw new Error(`Error fetching evolved form: ${highestEvolvedName}`);
-        }
-        const highestEvolvedData = await highestEvolvedRes.json();
-        evolvedID = highestEvolvedData.id;
+    pokemon.primaryType = pokemon.types[0].type.name;
+    pokemon.secondaryType = pokemon.types[1] ? pokemon.types[1].type.name : "None";
 
-        canEvolve = checkEvolutionChain(species.name, evolutionChainData.chain);
+    evolution.id = evolutionChainData.id;
+    console.log(isEvolving);
 
-        addSpeciesToSeen(evolutionChainData.chain);
-    } catch (error) {
-        console.error(`Error in getPokeAPIStats: ${error.message}`);
+    // Check for duplicate evolution.id
+    if (!isEvolving && seenSpecies.includes(evolution.id)) {
+        console.log(`Duplicate evolution id found: ${evolution.id}. Generating a new Pokémon...`);
+        await generatePokemon(getRandomPokemon());
+        return; // Exit the current function and prevent further execution
     }
-}
 
-function addSpeciesToSeen(evolutionChain) {
-    let currentEvolution = evolutionChain;
-    while (currentEvolution) {
-        seenSpecies.add(currentEvolution.species.name);
-        if (currentEvolution.evolves_to.length > 0) {
-            currentEvolution = currentEvolution.evolves_to[0];
-        } else {
-            break;
-        }
+    isEvolving = false;
+
+    const baseEvolutionArray = evolutionChainData.chain.evolves_to;
+    
+    let canEvolve = true;
+    
+    if (baseEvolutionArray.length === 0) {
+        evolution.evolvesTo = "Nothing";
+        evolution.options = 0;
+        canEvolve = false;
     }
-}
-
-function isSpeciesSeen(speciesName) {
-    return seenSpecies.has(speciesName);
-}
-
-async function getValidRandomPokemon() {
-    let randomPokemon;
-    let speciesName;
-    do {
-        randomPokemon = getRandomPokemon();
-        const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${randomPokemon}`;
-        const speciesRes = await fetch(speciesUrl);
-        const speciesData = await speciesRes.json();
-        speciesName = speciesData.name;
-    } while (isSpeciesSeen(speciesName));
-    return randomPokemon;
-}
-
-function checkEvolutionChain(pokemonName, evolutionChain) {
-    let currentEvolution = evolutionChain;
-
-    while (currentEvolution) {
-        if (currentEvolution.species.name === pokemonName) {
-            // Check if there are further evolutions
-            return currentEvolution.evolves_to.length > 0;
+    else if (baseEvolutionArray.length === 1 && evolutionChainData.chain.evolves_to[0].evolves_to.length > 0) {
+        const additionalEvolutionArray = evolutionChainData.chain.evolves_to[0].evolves_to;
+        evolution.evolvesTo = additionalEvolutionArray[Math.floor(Math.random() * additionalEvolutionArray.length)].species.name;
+        evolution.options = additionalEvolutionArray.length;
+        for (let i = 0; i < evolution.options; i++) {
+            if (species.name === additionalEvolutionArray[i].species.name) {
+                canEvolve = false;
+                break;
+            }
         }
-        // Move to the next evolution in the chain
-        if (currentEvolution.evolves_to.length > 0) {
-            currentEvolution = currentEvolution.evolves_to[0];
-        } else {
-            break;
+    } else  {
+        evolution.evolvesTo = baseEvolutionArray[Math.floor(Math.random() * baseEvolutionArray.length)].species.name;
+        evolution.options = baseEvolutionArray.length;
+        for (let i = 0; i < evolution.options; i++) {
+            if (species.name === baseEvolutionArray[i].species.name) {
+                canEvolve = false;
+                break;
+            }
         }
     }
 
-    return false;
+    console.log(`${pokemon.name}'s evolution id is ${evolution.id} and has ${evolution.options} evolution options. If evolved, it will evolve into ${evolution.evolvesTo}. Can it evolve? ${canEvolve}.`);
+
+    // Enable or disable evolve button
+    if (canEvolve && !evolveUsed) {
+        powerEvolve.disabled = false;
+    } else {
+        powerEvolve.disabled = true;
+    }
+
+    // Push evolution chain number to seenSpecies array
+    seenSpecies.push(evolution.id);
+    console.log(seenSpecies);
+    
+    // Get evolved pokemon data
+    if (canEvolve) {
+        // Get evolved Pokémon data
+        const fullyEvolvedUrl = `https://pokeapi.co/api/v2/pokemon/${evolution.evolvesTo}`;
+        const fullyEvolvedRes = await fetch(fullyEvolvedUrl);
+        const fullyEvolvedData = await fullyEvolvedRes.json();
+
+        evolvedID = fullyEvolvedData.id;
+    }
 }

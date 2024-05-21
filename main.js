@@ -37,7 +37,6 @@ function getRandomPokemon() {
 
 // Update all stat elements
 function updateAllStats() {
-    ``
     summaryElements.number.hp.innerHTML = pokemon.stats.hp;
     summaryElements.number.attack.innerHTML = pokemon.stats.atk;
     summaryElements.number.defense.innerHTML = pokemon.stats.def;
@@ -165,18 +164,20 @@ function updateRoundDisplay() {
 const powerTrade = document.getElementById("power_trade");
 
 powerTrade.addEventListener("click", async () => {
-    const validRandomPokemon = await getValidRandomPokemon();
-    await generatePokemon(validRandomPokemon);
+    await generatePokemon();
     powerTrade.disabled = true;
 });
 
 // Evolve Pokemon
 const powerEvolve = document.getElementById("power_evolve");
 let evolveUsed = false;
+let isEvolving = false;
+
 
 powerEvolve.disabled = true;
 
 powerEvolve.addEventListener("click", () => {
+    isEvolving = true;
     generatePokemon(evolvedID);
     powerEvolve.disabled = true;
     evolveUsed = true;
@@ -188,27 +189,23 @@ const pokeball = document.getElementById("hero_pokeball");
 // Generate new Pokemon with an optional ID parameter
 async function generatePokemon(pokemonID = getRandomPokemon()) {
     resetStatsAndIcons(); // Reset stats and icons
-    summaryElements.secondaryType.classList.remove("u-display-none");
     enableButtons();
     await getPokeAPIStats(pokemonID);
     animatePokeballOut();
     animatePokemonIn();
     animateStatsOut();
+
+    summaryElements.secondaryType.classList.remove("u-display-none");
     summaryElements.image.src = pokemon.img;
     summaryElements.image.alt = `Image of ${species.name}`;
     summaryElements.name.innerHTML = `${species.name}`;
     summaryElements.primaryType.innerHTML = `${pokemon.primaryType}`;
     summaryElements.secondaryType.innerHTML = `${pokemon.secondaryType}`;
+
     if (pokemon.secondaryType !== "None") {
         summaryElements.secondaryType.innerHTML = pokemon.secondaryType;
     } else {
         summaryElements.secondaryType.classList.add("u-display-none");
-    }
-    console.log(canEvolve);
-    if (canEvolve && !evolveUsed) {
-        powerEvolve.disabled = false;
-    } else {
-        powerEvolve.disabled = true;
     }
 }
 
