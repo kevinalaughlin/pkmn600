@@ -22,7 +22,6 @@ html {
 body {
     background-color: var(--black);
     color: var(--white);
-    padding: 0 1rem;
     overflow-x: hidden;
     font-family: "new-science-mono", sans-serif;
     font-weight: 500;
@@ -44,14 +43,20 @@ nav {
     display: flex;
     align-items: center;
     height: 3rem;
+    padding: 0 1rem;
 }
 
 main {
+    position: relative;
+}
+
+.game {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     height: calc(100svh - 3rem);
     gap: 1rem;
+    padding: 0 1rem;
 }
 
 button {
@@ -210,6 +215,54 @@ h2, .h2 {
     border: 1px solid var(--gray);
     border-radius: 50%;
 }
+
+/* End Game Screen */
+
+.game-results {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100svh - 3rem);
+    gap: 1rem;
+    padding: 0 1rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #00000050;
+    width: 100%;
+    backdrop-filter: blur(24px);
+}
+
+.results {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.achievement {
+    width: 100%;
+    padding: 0 1rem;
+}
+
+.results_max-wrapper {
+    color: var(--red);
+    text-align: right;
+}
+
+.game-result_options {
+    padding: 2rem 0;
+}
+
+.primary_button {
+    width: 100%;
+    background-color: var(--white);
+    color: var(--black);
+    stroke: none;
+}
+
+
+/* Global Classes */
 
 .u-display-none {
     display: none;

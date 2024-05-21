@@ -1,3 +1,5 @@
+const game = document.getElementById("game");
+
 const summaryElements = {
     image: document.getElementById("hero_pokemon"),
     name: document.getElementById("preview_name"),
@@ -28,6 +30,8 @@ const summaryElements = {
         speed: document.getElementById("speed-number")
     },
 };
+
+let maxScore = 0;
 
 // Generate a random number between 1 - 1025 (current number of Pokémon)
 function getRandomPokemon() {
@@ -249,23 +253,26 @@ function calculateMaximumPossibleScore() {
         console.log(`Pokémon: ${choice.pokemon}, Stat: ${choice.stat}, Value: ${choice.value}`);
     });
 
+    maxScore = bestScore; // Update the global maxScore variable
     return bestScore;
 }
 
 // Function to update the displayed maximum possible score
 function updateMaximumPossibleScoreDisplay() {
-    const maxScore = calculateMaximumPossibleScore();
     const maxScoreElement = document.getElementById("score_max");
-    maxScoreElement.innerHTML = maxScore;
+    if (maxScoreElement) {
+        maxScoreElement.innerHTML = maxScore;
+    } else {
+        console.error("Max score element not found.");
+    }
 }
 
 // Example usage: update the maximum possible score after selecting a stat
 function selectStat(stat, statValue, button) {
+    gameScore += statValue;
     button.classList.add("stats_chosen");
     button.disabled = true;
-    gameScore += statValue;
-    round++;
-
+    
     // Store the current Pokémon data in a new object
     const currentPokemonData = {
         name: species.name,
@@ -282,6 +289,7 @@ function selectStat(stat, statValue, button) {
     caughtPokemon.push(currentPokemonData);
 
     // Update the maximum possible score display
+    calculateMaximumPossibleScore();
     updateMaximumPossibleScoreDisplay();
 
     disableButtons();
@@ -292,4 +300,6 @@ function selectStat(stat, statValue, button) {
     updateRoundDisplay();
     animatePokemonOut();
     animatePokeballIn();
+
+    round < 6 ? round++ : endGame();
 }

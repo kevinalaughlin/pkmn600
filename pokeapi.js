@@ -94,7 +94,13 @@ async function getPokeAPIStats(num) {
     // Get evolved pokemon data
     if (canEvolve) {
         // Get evolved Pokémon data
-        const fullyEvolvedUrl = `https://pokeapi.co/api/v2/pokemon/${evolution.evolvesTo}`;
+        const evolvedSpeciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${evolution.evolvesTo}`;
+        const evolvedSpeciesRes = await fetch(evolvedSpeciesUrl);
+        const evolvedSpeciesData = await evolvedSpeciesRes.json();
+
+        let pokemonVariety = evolvedSpeciesData.varieties[0].pokemon.name;
+
+        const fullyEvolvedUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonVariety}`;
         const fullyEvolvedRes = await fetch(fullyEvolvedUrl);
         const fullyEvolvedData = await fullyEvolvedRes.json();
 
