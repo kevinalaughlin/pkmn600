@@ -33,12 +33,6 @@ const summaryElements = {
 
 let maxScore = 0;
 
-// Generate a random number between 1 - 1025 (current number of Pokémon)
-function getRandomPokemon() {
-    return Math.floor(Math.random() * 1025) + 1;
-}
-
-
 // Update all stat elements
 function updateAllStats() {
     summaryElements.number.hp.innerHTML = pokemon.stats.hp;
@@ -188,10 +182,10 @@ powerEvolve.addEventListener("click", () => {
 });
 
 // Game assets
-const pokeball = document.getElementById("hero_pokeball");
+const pokeball = document.getElementById("hero");
 
 // Generate new Pokemon with an optional ID parameter
-async function generatePokemon(pokemonID = getRandomPokemon()) {
+async function generatePokemon(pokemonID = getRandomPokemonNumber()) {
     resetStatsAndIcons(); // Reset stats and icons
     enableButtons();
     await getPokeAPIStats(pokemonID);

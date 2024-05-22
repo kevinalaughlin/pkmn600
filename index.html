@@ -16,7 +16,7 @@
     </header>
     <main>
         <section class="game" id="game">
-            <div class="score">
+            <div class="score u-opacity-0" id="score">
                 <div class="score_round-wrapper">
                     <div class="eyebrow">Round</div>
                     <div class="h2"><span id="current_round">1</span>/6</div>
@@ -30,13 +30,35 @@
                     <div class="h2" id="score_max">0</div>
                 </div>
             </div>
-            <div class="hero">
-                <div class="hero_pokeball-wrapper"><img class="hero_pokeball" id="hero_pokeball"
-                        src="images/pokeball-main.svg"></div>
-                <div class="hero_pokemon-wrapper"><img class="hero_pokemon u-display-none" id="hero_pokemon" src="">
+            <div class="hero" id="hero"><img class="hero_pokemon u-display-none" id="hero_pokemon" src=""></div>
+            <div class="settings" id="settings">
+                <span class="h1">Settings</span>
+                <div class="generations_wrapper">
+                    <span>Pokemon Gens</span>
+                    <div class="generations_button-wrapper">
+                        <input type="checkbox" id="gen-1" name="gen-1" class="generation-checkbox" checked />
+                        <label for="gen-1" class="switch">1</label>
+                        <input type="checkbox" id="gen-2" name="gen-2" class="generation-checkbox" checked />
+                        <label for="gen-2" class="switch">2</label>
+                        <input type="checkbox" id="gen-3" name="gen-3" class="generation-checkbox" checked />
+                        <label for="gen-3" class="switch">3</label>
+                        <input type="checkbox" id="gen-4" name="gen-4" class="generation-checkbox" checked />
+                        <label for="gen-4" class="switch">4</label>
+                        <input type="checkbox" id="gen-5" name="gen-5" class="generation-checkbox" checked />
+                        <label for="gen-5" class="switch">5</label>
+                        <input type="checkbox" id="gen-6" name="gen-6" class="generation-checkbox" checked />
+                        <label for="gen-6" class="switch">6</label>
+                        <input type="checkbox" id="gen-7" name="gen-7" class="generation-checkbox" checked />
+                        <label for="gen-7" class="switch">7</label>
+                        <input type="checkbox" id="gen-8" name="gen-8" class="generation-checkbox" checked />
+                        <label for="gen-8" class="switch">8</label>
+                        <input type="checkbox" id="gen-9" name="gen-9" class="generation-checkbox" checked />
+                        <label for="gen-9" class="switch">9</label>
+                    </div>
                 </div>
+                <button class="start-button" id="start-button">Start</button>
             </div>
-            <div class="summary">
+            <div class="summary u-display-none" id="summary">
                 <div class="start">
                     <button class="power_button" id="power_evolve">
                         <div class="power_icon"><img src="images/icons/evolve.svg" alt="Evolve icon"></div>
@@ -116,6 +138,7 @@
     <script src="endGame.js"></script>
     <script src="animations.js"></script>
     <script src="main.js"></script>
+    <script src="settings.js"></script>
 </body>
 
 </html>

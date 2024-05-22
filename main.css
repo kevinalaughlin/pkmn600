@@ -46,6 +46,56 @@ nav {
     padding: 0 1rem;
 }
 
+.switch {
+    padding: 1rem 0;
+    width: 100%;
+    border: 1px solid var(--black);
+    border-radius: 0.25rem;
+    text-align: center;
+    color: var(--gray);
+    background-color: var(--black);
+}
+
+.generation-checkbox:checked + .switch {
+    border: 1px solid var(--white);
+    color: var(--white);
+}
+
+.generation-checkbox {
+    display: none;
+}
+
+.settings {
+    padding: 0 0 2rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    height: 18rem;
+    gap: 1rem;
+}
+
+.generations_wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.generations_button-wrapper {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.generation-button {
+    padding: 1rem 0;
+    width: 100%;
+    border: 1px solid var(--white);
+}
+
+.generation-button:disabled {
+    border: 1px solid var(--black);
+    color: var(--gray)
+}
+
 main {
     position: relative;
 }
@@ -86,18 +136,26 @@ h2, .h2 {
     height: 1rem;
 }
 
-.hero_pokeball, .hero_pokemon {
-    width: 15rem;
+.hero {
+    width: 100%;
+    height: 30svh;
+    max-height: 25rem;
+    background-image: url("images/pokeball-main.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    justify-content: center;
 }
 
 .hero_pokemon {
-    width: 15rem;
+    height: 100%;
 }
 
 .score {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
+    height: 5rem;
 }
 
 .score_round-wrapper {
@@ -155,6 +213,8 @@ h2, .h2 {
     padding: 0 0 2rem 0;
     display: flex;
     flex-direction: column;
+    justify-content: end;
+    height: 18rem;
 }
 
 .start {
@@ -180,12 +240,6 @@ h2, .h2 {
     padding: 0.25rem 0.35rem 0.35rem 0.5rem;
     background-color: var(--surface-gray);
     border-radius: 0.25rem;
-}
-
-.hero {
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .power_button {
@@ -266,4 +320,8 @@ h2, .h2 {
 
 .u-display-none {
     display: none;
+}
+
+.u-opacity-0 {
+    opacity: 0;
 }

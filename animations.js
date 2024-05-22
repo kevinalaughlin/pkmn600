@@ -3,11 +3,11 @@ function animateElement(element, action) {
 }
 
 function animatePokeballOut() {
-    animateElement(pokeball, "add");
+
 }
 
 function animatePokeballIn() {
-    animateElement(pokeball, "remove");
+
 }
 
 function animatePokemonOut() {

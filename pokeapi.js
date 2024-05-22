@@ -42,7 +42,7 @@ async function getPokeAPIStats(num) {
     // Check for duplicate evolution.id
     if (!isEvolving && seenSpecies.includes(evolution.id)) {
         console.log(`Duplicate evolution id found: ${evolution.id}. Generating a new Pokémon...`);
-        await generatePokemon(getRandomPokemon());
+        await generatePokemon(getRandomPokemonNumber());
         return; // Exit the current function and prevent further execution
     }
 
