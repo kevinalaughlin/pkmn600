@@ -181,9 +181,6 @@ powerEvolve.addEventListener("click", () => {
     evolveUsed = true;
 });
 
-// Game assets
-const pokeball = document.getElementById("hero");
-
 // Generate new Pokemon with an optional ID parameter
 async function generatePokemon(pokemonID = getRandomPokemonNumber()) {
     resetStatsAndIcons(); // Reset stats and icons
@@ -208,6 +205,7 @@ async function generatePokemon(pokemonID = getRandomPokemonNumber()) {
 }
 
 pokeball.addEventListener("click", () => {
+    animatePokeball();
     generatePokemon();
 });
 
@@ -263,6 +261,7 @@ function updateMaximumPossibleScoreDisplay() {
 
 // Example usage: update the maximum possible score after selecting a stat
 function selectStat(stat, statValue, button) {
+    pokeballTimeline.reverse();
     gameScore += statValue;
     button.classList.add("stats_chosen");
     button.disabled = true;

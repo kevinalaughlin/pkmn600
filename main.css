@@ -22,7 +22,7 @@ html {
 body {
     background-color: var(--black);
     color: var(--white);
-    overflow-x: hidden;
+    overflow: visible;
     font-family: "new-science-mono", sans-serif;
     font-weight: 500;
     text-transform: uppercase;
@@ -96,10 +96,6 @@ nav {
     color: var(--gray)
 }
 
-main {
-    position: relative;
-}
-
 .game {
     display: flex;
     flex-direction: column;
@@ -140,15 +136,31 @@ h2, .h2 {
     width: 100%;
     height: 30svh;
     max-height: 25rem;
-    background-image: url("images/pokeball-main.svg");
-    background-repeat: no-repeat;
-    background-position: center;
     display: flex;
     justify-content: center;
+    position: relative;
+}
+
+.pokeball-svg {
+    height: 100%;
+    overflow: visible;
+}
+
+.pokeball-outline {
+    fill: none;
+    stroke: #fff;
+    stroke-miterlimit: 10;
+}
+
+.pokeball-solid {
+    fill: #fff;
+    stroke-width: 0px;
 }
 
 .hero_pokemon {
-    height: 100%;
+    height: 90%;
+    position: absolute;
+
 }
 
 .score {
